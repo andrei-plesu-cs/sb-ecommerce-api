@@ -29,31 +29,32 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
-        if (categoryRepository.existsByCategoryName(category.getCategoryName())) {
-            throw new ApiException("A category with name \"%s\" already exists".formatted(category.getCategoryName()));
-        };
+    public CategoryDto createCategory(CategoryDto categoryDto) {
+        if (categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
+            throw new ApiException("A category with name \"%s\" already exists".formatted(categoryDto.getCategoryName()));
+        }
         var categoryToSave = new Category();
-        categoryToSave.setCategoryName(category .getCategoryName());
+        categoryToSave.setCategoryName(categoryDto.getCategoryName());
         categoryRepository.save(categoryToSave);
+        return modelMapper.map(categoryToSave, CategoryDto.class);
     }
 
     @Override
-    public String deleteCategory(Long categoryId) {
+    public CategoryDto deleteCategory(Long categoryId) {
         Category dbCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(Category.class, categoryId));
 
         categoryRepository.delete(dbCategory);
-        return "Category with id %d deleted.".formatted(categoryId);
+        return modelMapper.map(dbCategory, CategoryDto.class);
     }
 
     @Override
-    public String updateCategory(Long categoryId, Category category) {
+    public CategoryDto updateCategory(Long categoryId, CategoryDto categoryDto) {
         Category dbCategory = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(Category.class, categoryId));
 
-        dbCategory.setCategoryName(category.getCategoryName());
+        dbCategory.setCategoryName(categoryDto.getCategoryName());
         categoryRepository.save(dbCategory);
-        return "Category with id %d updated.".formatted(categoryId);
+        return modelMapper.map(dbCategory, CategoryDto.class);
     }
 }

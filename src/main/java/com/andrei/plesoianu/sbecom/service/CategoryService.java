@@ -1,11 +1,11 @@
 package com.andrei.plesoianu.sbecom.service;
 
-import com.andrei.plesoianu.sbecom.model.Category;
+import com.andrei.plesoianu.sbecom.payload.CategoryDto;
 import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
 
 public interface CategoryService {
     CategoryResponse getAllCategories();
-    void createCategory(Category category);
-    String deleteCategory(Long categoryId);
-    String updateCategory(Long categoryId, Category category);
+    CategoryDto createCategory(CategoryDto categoryDto);
+    CategoryDto deleteCategory(Long categoryId);
+    CategoryDto updateCategory(Long categoryId, CategoryDto categoryDto);
 }

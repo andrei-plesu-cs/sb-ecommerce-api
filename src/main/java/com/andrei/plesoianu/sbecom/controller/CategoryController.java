@@ -1,6 +1,6 @@
 package com.andrei.plesoianu.sbecom.controller;
 
-import com.andrei.plesoianu.sbecom.model.Category;
+import com.andrei.plesoianu.sbecom.payload.CategoryDto;
 import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
 import com.andrei.plesoianu.sbecom.service.CategoryService;
 import jakarta.validation.Valid;
@@ -24,19 +24,18 @@ public class CategoryController {
     }
 
     @PostMapping("/public/categories")
-    public ResponseEntity<String> createCategory(@Valid @RequestBody Category category) {
-        categoryService.createCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Category added successfully");
+    public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.createCategory(categoryDto));
     }
 
     @DeleteMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {
+    public ResponseEntity<CategoryDto> deleteCategory(@PathVariable Long categoryId) {
         return ResponseEntity.ok(categoryService.deleteCategory(categoryId));
     }
 
     @PutMapping("/public/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable Long categoryId,
-                                                 @RequestBody Category category) {
-        return ResponseEntity.ok(categoryService.updateCategory(categoryId, category));
+    public ResponseEntity<CategoryDto> updateCategory(@PathVariable Long categoryId,
+                                                 @RequestBody CategoryDto categoryDto) {
+        return ResponseEntity.ok(categoryService.updateCategory(categoryId, categoryDto));
     }
 }
