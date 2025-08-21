@@ -1,5 +1,7 @@
 package com.andrei.plesoianu.sbecom.controller;
 
+import com.andrei.plesoianu.sbecom.config.AppConstants;
+import com.andrei.plesoianu.sbecom.config.SortOrder;
 import com.andrei.plesoianu.sbecom.payload.CategoryDto;
 import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
 import com.andrei.plesoianu.sbecom.service.CategoryService;
@@ -19,8 +21,13 @@ public class CategoryController {
     }
 
     @GetMapping("/public/categories")
-    public ResponseEntity<CategoryResponse> getCategories() {
-        return ResponseEntity.ok(categoryService.getAllCategories());
+    public ResponseEntity<CategoryResponse> getCategories(
+            @RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER) Integer pageNumber,
+            @RequestParam(name = "pageSize", defaultValue = AppConstants.PAGE_SIZE) Integer pageSize,
+            @RequestParam(name = "sortBy", defaultValue = AppConstants.SORT_CATEGORIES_BY) String sortBy,
+            @RequestParam(name = "sortDir", defaultValue = AppConstants.SORT_DIR) SortOrder sortOrder
+    ) {
+        return ResponseEntity.ok(categoryService.getAllCategories(pageNumber, pageSize, sortBy, sortOrder));
     }
 
     @PostMapping("/public/categories")
