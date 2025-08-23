@@ -1,5 +1,7 @@
 package com.andrei.plesoianu.sbecom.service;
 
+import com.andrei.plesoianu.sbecom.config.SortOrder;
+import com.andrei.plesoianu.sbecom.exceptions.ApiException;
 import com.andrei.plesoianu.sbecom.exceptions.NotFoundException;
 import com.andrei.plesoianu.sbecom.model.Category;
 import com.andrei.plesoianu.sbecom.model.Product;
@@ -10,6 +12,10 @@ import com.andrei.plesoianu.sbecom.repositories.ProductRepository;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -42,6 +48,11 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(Category.class, categoryId));
 
+        // Check if there is already one product with the same name
+        if (productRepository.existsByProductName(productDto.getProductName())) {
+            throw new ApiException("A product with name %s already exists".formatted(productDto.getProductName()));
+        }
+
         var product = new Product();
         product.setProductName(productDto.getProductName());
         product.setImage(productDto.getImage());
@@ -57,32 +68,50 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts() {
-        var productDtos = productRepository.findAll().stream()
-                .map(product -> modelMapper.map(product, ProductDto.class))
-                .toList();
-        return new ProductResponse(productDtos);
+    public ProductResponse getAllProducts(Integer pageSize, Integer pageNumber, String sortBy, SortOrder sortDir) {
+        Sort sortByAndOrder = switch (sortDir) {
+            case ASCENDING ->  Sort.by(Sort.Direction.ASC, sortBy);
+            case DESCENDING ->  Sort.by(Sort.Direction.DESC, sortBy);
+        };
+
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+        var productPage = productRepository.findAll(pageDetails);
+
+        return constructResponseFromPage(productPage);
     }
 
     @Override
-    public ProductResponse getProductsByCategory(Long categoryId) {
+    public ProductResponse getProductsByCategory(Long categoryId, Integer pageSize, Integer pageNumber,
+                                                 String sortBy, SortOrder sortDir) {
+        Sort sortByAndOrder = switch (sortDir) {
+            case ASCENDING ->  Sort.by(Sort.Direction.ASC, sortBy);
+            case DESCENDING ->  Sort.by(Sort.Direction.DESC, sortBy);
+        };
+
         var category = categoryRepository.findById(categoryId)
                 .orElseThrow(() -> new NotFoundException(Category.class, categoryId));
 
-        var productDtos = productRepository.findByCategoryOrderByPriceAsc(category).stream()
-                .map(product -> modelMapper.map(product, ProductDto.class))
-                .toList();
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 
-        return new ProductResponse(productDtos);
+        var productPage = productRepository.findByCategory(category, pageDetails);
+
+        return constructResponseFromPage(productPage);
     }
 
     @Override
-    public ProductResponse searchProductsByKeyword(String keyword) {
-        var productDtos = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%").stream()
-                .map(product -> modelMapper.map(product, ProductDto.class))
-                .toList();
+    public ProductResponse searchProductsByKeyword(String keyword, Integer pageSize, Integer pageNumber,
+                                                   String sortBy, SortOrder sortDir) {
+        Sort sortByAndOrder = switch (sortDir) {
+            case ASCENDING ->  Sort.by(Sort.Direction.ASC, sortBy);
+            case DESCENDING ->  Sort.by(Sort.Direction.DESC, sortBy);
+        };
 
-        return new ProductResponse(productDtos);
+        Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+
+        var productPage = productRepository.findByProductNameLikeIgnoreCase("%" + keyword + "%", pageDetails);
+
+        return constructResponseFromPage(productPage);
     }
 
     @Override
@@ -127,5 +156,18 @@ public class ProductServiceImpl implements ProductService {
 
         // Return mapping of the product to dto
         return modelMapper.map(updatedProduct, ProductDto.class);
+    }
+
+    private ProductResponse constructResponseFromPage(Page<Product> productPage) {
+        var response = new ProductResponse();
+        response.setContent(productPage.stream()
+                .map(product -> modelMapper.map(product, ProductDto.class))
+                .toList());
+        response.setPageNumber(productPage.getNumber());
+        response.setPageSize(productPage.getSize());
+        response.setTotalElements(productPage.getTotalElements());
+        response.setTotalPages(productPage.getTotalPages());
+        response.setLast(productPage.isLast());
+        return response;
     }
 }

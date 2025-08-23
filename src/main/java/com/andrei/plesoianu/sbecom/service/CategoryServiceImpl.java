@@ -51,7 +51,7 @@ public class CategoryServiceImpl implements CategoryService {
     @Override
     public CategoryDto createCategory(CategoryDto categoryDto) {
         if (categoryRepository.existsByCategoryName(categoryDto.getCategoryName())) {
-            throw new ApiException("A category with name \"%s\" already exists".formatted(categoryDto.getCategoryName()));
+            throw new ApiException("A category with name %s already exists".formatted(categoryDto.getCategoryName()));
         }
         var categoryToSave = new Category();
         categoryToSave.setCategoryName(categoryDto.getCategoryName());
