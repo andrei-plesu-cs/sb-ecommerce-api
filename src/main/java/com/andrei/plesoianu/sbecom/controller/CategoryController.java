@@ -1,7 +1,7 @@
 package com.andrei.plesoianu.sbecom.controller;
 
 import com.andrei.plesoianu.sbecom.config.AppConstants;
-import com.andrei.plesoianu.sbecom.config.SortOrder;
+import com.andrei.plesoianu.sbecom.enums.SortOrder;
 import com.andrei.plesoianu.sbecom.payload.CategoryDto;
 import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
 import com.andrei.plesoianu.sbecom.service.CategoryService;

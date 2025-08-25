@@ -1,6 +1,6 @@
 package com.andrei.plesoianu.sbecom.service;
 
-import com.andrei.plesoianu.sbecom.config.SortOrder;
+import com.andrei.plesoianu.sbecom.enums.SortOrder;
 import com.andrei.plesoianu.sbecom.exceptions.ApiException;
 import com.andrei.plesoianu.sbecom.exceptions.NotFoundException;
 import com.andrei.plesoianu.sbecom.model.Category;

@@ -1,4 +1,4 @@
-package com.andrei.plesoianu.sbecom.config;
+package com.andrei.plesoianu.sbecom.enums;
 
 public enum SortOrder {
     ASCENDING,

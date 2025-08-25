@@ -1,6 +1,6 @@
 package com.andrei.plesoianu.sbecom.service;
 
-import com.andrei.plesoianu.sbecom.config.SortOrder;
+import com.andrei.plesoianu.sbecom.enums.SortOrder;
 import com.andrei.plesoianu.sbecom.payload.ProductDto;
 import com.andrei.plesoianu.sbecom.payload.ProductResponse;
 import org.springframework.web.multipart.MultipartFile;
