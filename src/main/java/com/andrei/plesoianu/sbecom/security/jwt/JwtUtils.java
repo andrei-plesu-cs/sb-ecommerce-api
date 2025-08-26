@@ -43,12 +43,26 @@ public class JwtUtils {
         return cookie != null ? cookie.getValue() : null;
     }
 
+    /**
+     * Generates a cookie containing the Jwt token generated based on the
+     * userDetails object (which contains the current authenticated user)
+     */
     public ResponseCookie generateJwtCookie(UserDetailsImpl userDetails) {
         String jwt = generateTokenFromUsername(userDetails);
         return ResponseCookie.from(jwtCookie, jwt)
                 .path("/api")
                 .maxAge(Duration.ofDays(1))
                 .httpOnly(false)
+                .build();
+    }
+
+    /**
+     * Generates a cookie containing no value for the Jwt cookie.
+     * Used to clear the cookie.
+     */
+    public ResponseCookie getCleanJwtToken() {
+        return ResponseCookie.from(jwtCookie)
+                .path("/api")
                 .build();
     }
 

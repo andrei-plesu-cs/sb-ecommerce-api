@@ -9,7 +9,7 @@ import com.andrei.plesoianu.sbecom.repositories.UserRepository;
 import com.andrei.plesoianu.sbecom.security.jwt.JwtUtils;
 import com.andrei.plesoianu.sbecom.security.request.LoginRequest;
 import com.andrei.plesoianu.sbecom.security.request.SignupRequest;
-import com.andrei.plesoianu.sbecom.security.response.LoginResponse;
+import com.andrei.plesoianu.sbecom.security.response.UserInfoResponse;
 import com.andrei.plesoianu.sbecom.security.response.MessageResponse;
 import com.andrei.plesoianu.sbecom.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -22,13 +22,9 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -70,14 +66,20 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
-        List<String> userRoles = userDetails.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .toList();
-        LoginResponse loginResponse = new LoginResponse(userDetails.getId(),
-                userDetails.getUsername(), userRoles);
 
-        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(loginResponse);
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
+
+        UserInfoResponse userInfoResponse = UserInfoResponse.of(userDetails);
+
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(userInfoResponse);
+    }
+
+    @PostMapping("/signout")
+    public ResponseEntity<String> signoutUser() {
+        ResponseCookie cookie = jwtUtils.getCleanJwtToken();
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body("You've been signed out!");
     }
 
     @PostMapping("/signup")
@@ -114,6 +116,24 @@ public class AuthController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(new MessageResponse("User created"));
+    }
+
+    @GetMapping("/username")
+    public ResponseEntity<String> currentUserName(Authentication authentication) {
+        return authentication != null
+                ? ResponseEntity.ok(authentication.getName())
+                : ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<UserInfoResponse> getUserDetails(Authentication authentication) {
+        if (authentication != null) {
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            UserInfoResponse userInfoResponse = UserInfoResponse.of(userDetails);
+            return ResponseEntity.ok(userInfoResponse);
+        } else { // return empty object if no user is logged in
+            return ResponseEntity.noContent().build();
+        }
     }
 
     private Role extractRole(AppRole appRole) {
