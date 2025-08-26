@@ -14,7 +14,9 @@ import com.andrei.plesoianu.sbecom.security.response.MessageResponse;
 import com.andrei.plesoianu.sbecom.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 import lombok.NonNull;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -68,14 +70,14 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        String jwtToken = jwtUtils.generateTokenFromUsername(userDetails);
+        ResponseCookie jwtCookie = jwtUtils.generateJwtCookie(userDetails);
         List<String> userRoles = userDetails.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();
         LoginResponse loginResponse = new LoginResponse(userDetails.getId(),
-                jwtToken, userDetails.getUsername(), userRoles);
+                userDetails.getUsername(), userRoles);
 
-        return ResponseEntity.ok(loginResponse);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(loginResponse);
     }
 
     @PostMapping("/signup")
