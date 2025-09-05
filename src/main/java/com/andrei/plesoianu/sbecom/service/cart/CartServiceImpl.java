@@ -45,7 +45,7 @@ public class CartServiceImpl implements CartService {
     @Override
     public CartDto addProductToCart(Long productId, Integer quantity) {
         // Find existing cart or create one
-        var cart = getCart();
+        var cart = getUserCart();
 
         // Retrive Product Details
         var product = productRepository.findById(productId)
@@ -87,7 +87,7 @@ public class CartServiceImpl implements CartService {
 
     @Override
     public CartDto getLoggedInUserCart() {
-        var cart = getCart();
+        var cart = getUserCart();
 
         return modelMapper.map(cart, CartDto.class);
     }
@@ -96,7 +96,7 @@ public class CartServiceImpl implements CartService {
     @Transactional
     public CartDto updateProductQuantityInCart(Long productId, int numRepr) {
         // Get logged in user cart
-        var cart = getCart();
+        var cart = getUserCart();
 
         // Get product or throw exception if not found
         var product = productRepository.findById(productId)
@@ -135,7 +135,7 @@ public class CartServiceImpl implements CartService {
         var product = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(Product.class, productId));
 
-        var cart = getCart();
+        var cart = getUserCart();
 
         var cartItem = cartItemRepository.findCartItemByCartAndProduct(cart, product)
                 .orElseThrow(() -> new NotFoundException(CartItem.class, productId));
@@ -149,7 +149,8 @@ public class CartServiceImpl implements CartService {
      * Gets existing cart associated with the logged in user, or creates
      * one otherwise
      */
-    private Cart getCart() {
+    @Override
+    public Cart getUserCart() {
         return cartRepository.findByEmail(authUtil.loggedInEmail())
                 .orElseGet(() -> {
                     var user = userRepository.findByUsername(authUtil.loggedInUsername())
