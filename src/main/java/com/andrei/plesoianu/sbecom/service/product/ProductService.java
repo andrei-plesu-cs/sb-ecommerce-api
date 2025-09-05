@@ -1,8 +1,8 @@
-package com.andrei.plesoianu.sbecom.service;
+package com.andrei.plesoianu.sbecom.service.product;
 
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
-import com.andrei.plesoianu.sbecom.payload.ProductDto;
-import com.andrei.plesoianu.sbecom.payload.ProductResponse;
+import com.andrei.plesoianu.sbecom.payload.product.ProductDto;
+import com.andrei.plesoianu.sbecom.payload.product.ProductResponse;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

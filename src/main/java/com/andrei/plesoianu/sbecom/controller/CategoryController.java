@@ -2,9 +2,9 @@ package com.andrei.plesoianu.sbecom.controller;
 
 import com.andrei.plesoianu.sbecom.config.AppConstants;
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
-import com.andrei.plesoianu.sbecom.payload.CategoryDto;
-import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
-import com.andrei.plesoianu.sbecom.service.CategoryService;
+import com.andrei.plesoianu.sbecom.payload.category.CategoryDto;
+import com.andrei.plesoianu.sbecom.payload.category.CategoryResponse;
+import com.andrei.plesoianu.sbecom.service.category.CategoryService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;

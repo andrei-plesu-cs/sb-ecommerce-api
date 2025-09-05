@@ -1,4 +1,4 @@
-package com.andrei.plesoianu.sbecom.service;
+package com.andrei.plesoianu.sbecom.service.file;
 
 import com.andrei.plesoianu.sbecom.exceptions.ApiException;
 import lombok.NonNull;

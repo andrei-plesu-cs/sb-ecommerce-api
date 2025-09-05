@@ -1,7 +1,7 @@
 package com.andrei.plesoianu.sbecom.controller;
 
 import com.andrei.plesoianu.sbecom.enums.QuantityUpdateOperation;
-import com.andrei.plesoianu.sbecom.payload.CartDto;
+import com.andrei.plesoianu.sbecom.payload.cart.CartDto;
 import com.andrei.plesoianu.sbecom.service.cart.CartService;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;

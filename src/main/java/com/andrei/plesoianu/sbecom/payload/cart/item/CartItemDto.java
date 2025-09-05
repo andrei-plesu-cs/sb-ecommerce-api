@@ -1,5 +1,7 @@
-package com.andrei.plesoianu.sbecom.payload;
+package com.andrei.plesoianu.sbecom.payload.cart.item;
 
+import com.andrei.plesoianu.sbecom.payload.cart.CartDto;
+import com.andrei.plesoianu.sbecom.payload.product.ProductDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

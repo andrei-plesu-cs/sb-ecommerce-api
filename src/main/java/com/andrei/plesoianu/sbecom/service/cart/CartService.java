@@ -1,6 +1,6 @@
 package com.andrei.plesoianu.sbecom.service.cart;
 
-import com.andrei.plesoianu.sbecom.payload.CartDto;
+import com.andrei.plesoianu.sbecom.payload.cart.CartDto;
 import jakarta.transaction.Transactional;
 
 import java.util.List;

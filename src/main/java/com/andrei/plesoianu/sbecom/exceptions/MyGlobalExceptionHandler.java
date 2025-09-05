@@ -1,6 +1,6 @@
 package com.andrei.plesoianu.sbecom.exceptions;
 
-import com.andrei.plesoianu.sbecom.payload.ApiResponse;
+import com.andrei.plesoianu.sbecom.payload.auth.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;

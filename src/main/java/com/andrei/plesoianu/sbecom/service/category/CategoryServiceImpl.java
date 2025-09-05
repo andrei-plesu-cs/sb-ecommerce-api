@@ -1,11 +1,11 @@
-package com.andrei.plesoianu.sbecom.service;
+package com.andrei.plesoianu.sbecom.service.category;
 
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
 import com.andrei.plesoianu.sbecom.exceptions.ApiException;
 import com.andrei.plesoianu.sbecom.exceptions.NotFoundException;
 import com.andrei.plesoianu.sbecom.model.Category;
-import com.andrei.plesoianu.sbecom.payload.CategoryDto;
-import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
+import com.andrei.plesoianu.sbecom.payload.category.CategoryDto;
+import com.andrei.plesoianu.sbecom.payload.category.CategoryResponse;
 import com.andrei.plesoianu.sbecom.repositories.CategoryRepository;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;

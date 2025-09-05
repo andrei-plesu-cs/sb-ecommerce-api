@@ -1,8 +1,8 @@
 package com.andrei.plesoianu.sbecom.config;
 
 import com.andrei.plesoianu.sbecom.model.Cart;
-import com.andrei.plesoianu.sbecom.payload.CartDto;
-import com.andrei.plesoianu.sbecom.payload.ProductDto;
+import com.andrei.plesoianu.sbecom.payload.cart.CartDto;
+import com.andrei.plesoianu.sbecom.payload.product.ProductDto;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;

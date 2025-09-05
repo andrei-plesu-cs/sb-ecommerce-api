@@ -1,4 +1,4 @@
-package com.andrei.plesoianu.sbecom.payload;
+package com.andrei.plesoianu.sbecom.payload.product;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

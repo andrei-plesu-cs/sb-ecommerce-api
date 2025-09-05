@@ -6,7 +6,7 @@ import com.andrei.plesoianu.sbecom.model.Cart;
 import com.andrei.plesoianu.sbecom.model.CartItem;
 import com.andrei.plesoianu.sbecom.model.Product;
 import com.andrei.plesoianu.sbecom.model.User;
-import com.andrei.plesoianu.sbecom.payload.CartDto;
+import com.andrei.plesoianu.sbecom.payload.cart.CartDto;
 import com.andrei.plesoianu.sbecom.repositories.CartItemRepository;
 import com.andrei.plesoianu.sbecom.repositories.CartRepository;
 import com.andrei.plesoianu.sbecom.repositories.ProductRepository;

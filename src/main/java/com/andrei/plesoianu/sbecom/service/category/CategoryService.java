@@ -1,8 +1,8 @@
-package com.andrei.plesoianu.sbecom.service;
+package com.andrei.plesoianu.sbecom.service.category;
 
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
-import com.andrei.plesoianu.sbecom.payload.CategoryDto;
-import com.andrei.plesoianu.sbecom.payload.CategoryResponse;
+import com.andrei.plesoianu.sbecom.payload.category.CategoryDto;
+import com.andrei.plesoianu.sbecom.payload.category.CategoryResponse;
 
 public interface CategoryService {
     CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, SortOrder sortOrder);

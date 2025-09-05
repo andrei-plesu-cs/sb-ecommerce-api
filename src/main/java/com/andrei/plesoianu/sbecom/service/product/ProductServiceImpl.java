@@ -1,4 +1,4 @@
-package com.andrei.plesoianu.sbecom.service;
+package com.andrei.plesoianu.sbecom.service.product;
 
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
 import com.andrei.plesoianu.sbecom.exceptions.ApiException;
@@ -6,12 +6,13 @@ import com.andrei.plesoianu.sbecom.exceptions.NotFoundException;
 import com.andrei.plesoianu.sbecom.model.Cart;
 import com.andrei.plesoianu.sbecom.model.Category;
 import com.andrei.plesoianu.sbecom.model.Product;
-import com.andrei.plesoianu.sbecom.payload.ProductDto;
-import com.andrei.plesoianu.sbecom.payload.ProductResponse;
+import com.andrei.plesoianu.sbecom.payload.product.ProductDto;
+import com.andrei.plesoianu.sbecom.payload.product.ProductResponse;
 import com.andrei.plesoianu.sbecom.repositories.CartItemRepository;
 import com.andrei.plesoianu.sbecom.repositories.CartRepository;
 import com.andrei.plesoianu.sbecom.repositories.CategoryRepository;
 import com.andrei.plesoianu.sbecom.repositories.ProductRepository;
+import com.andrei.plesoianu.sbecom.service.file.FileService;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;

@@ -2,9 +2,9 @@ package com.andrei.plesoianu.sbecom.controller;
 
 import com.andrei.plesoianu.sbecom.config.AppConstants;
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
-import com.andrei.plesoianu.sbecom.payload.ProductDto;
-import com.andrei.plesoianu.sbecom.payload.ProductResponse;
-import com.andrei.plesoianu.sbecom.service.ProductService;
+import com.andrei.plesoianu.sbecom.payload.product.ProductDto;
+import com.andrei.plesoianu.sbecom.payload.product.ProductResponse;
+import com.andrei.plesoianu.sbecom.service.product.ProductService;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.http.HttpStatus;
