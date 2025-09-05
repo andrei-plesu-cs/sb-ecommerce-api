@@ -27,4 +27,14 @@ public class CartItem {
     private Double discount;
 
     private Double productPrice;
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id=" + id +
+                ", quantity=" + quantity +
+                ", discount=" + discount +
+                ", productPrice=" + productPrice +
+                '}';
+    }
 }

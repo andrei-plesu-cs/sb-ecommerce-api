@@ -22,9 +22,30 @@ public class Cart {
     private User user;
 
     @OneToMany(mappedBy = "cart",
-            cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE },
+            cascade = { CascadeType.ALL },
             orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
 
     private Double totalPrice = 0.0;
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id=" + id +
+                ", totalPrice=" + totalPrice +
+                '}';
+    }
+
+    public void recomputePrices() {
+        totalPrice = cartItems.stream()
+                .mapToDouble(item -> item.getQuantity() * item.getProductPrice())
+                .sum();
+    }
+
+    public CartItem findCartItemByProductId(Long productId) {
+        return cartItems.stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElse(null);
+    }
 }

@@ -2,7 +2,9 @@ package com.andrei.plesoianu.sbecom.security;
 
 import com.andrei.plesoianu.sbecom.enums.AppRole;
 import com.andrei.plesoianu.sbecom.model.Role;
+import com.andrei.plesoianu.sbecom.model.User;
 import com.andrei.plesoianu.sbecom.repositories.RoleRepository;
+import com.andrei.plesoianu.sbecom.repositories.UserRepository;
 import com.andrei.plesoianu.sbecom.security.jwt.AuthEntryPointJwt;
 import com.andrei.plesoianu.sbecom.security.jwt.AuthTokenFilter;
 import com.andrei.plesoianu.sbecom.security.services.UserDetailsServiceImpl;
@@ -22,6 +24,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import java.util.Set;
 
 @Configuration
 @EnableWebSecurity
@@ -30,13 +33,16 @@ public class WebSecurityConfig {
     private final UserDetailsServiceImpl userDetailsService;
     private final AuthEntryPointJwt unauthorizedHandler;
     private final RoleRepository roleRepository;
+    private final UserRepository userRepository;
 
     public WebSecurityConfig(@NonNull UserDetailsServiceImpl userDetailsService,
                              @NonNull AuthEntryPointJwt unauthorizedHandler,
-                             @NonNull RoleRepository roleRepository) {
+                             @NonNull RoleRepository roleRepository,
+                             @NonNull UserRepository userRepository) {
         this.userDetailsService = userDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
         this.roleRepository = roleRepository;
+        this.userRepository = userRepository;
     }
 
     @Bean
@@ -93,26 +99,49 @@ public class WebSecurityConfig {
     @Bean
     public CommandLineRunner initData() {
         return (args -> {
-           roleRepository.findByRoleName(AppRole.ROLE_USER)
+            // Add roles to DB
+            var userRole = roleRepository.findByRoleName(AppRole.ROLE_USER)
                    .orElseGet(() -> {
                       var role = new Role();
                       role.setRoleName(AppRole.ROLE_USER);
                       return roleRepository.save(role);
                    });
 
-            roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
+            var adminRole = roleRepository.findByRoleName(AppRole.ROLE_ADMIN)
                     .orElseGet(() -> {
                         var role = new Role();
                         role.setRoleName(AppRole.ROLE_ADMIN);
                         return roleRepository.save(role);
                     });
 
-             roleRepository.findByRoleName(AppRole.ROLE_SELLER)
+            var sellerRole = roleRepository.findByRoleName(AppRole.ROLE_SELLER)
                     .orElseGet(() -> {
                         var role = new Role();
                         role.setRoleName(AppRole.ROLE_SELLER);
                         return roleRepository.save(role);
                     });
+
+            // Add one user to the DB, for each Role
+            var user1 = new User();
+            user1.setEmail("client@mail.com");
+            user1.setPassword(passwordEncoder().encode("user1"));
+            user1.setUsername("user1");
+            user1.setRoles(Set.of(userRole));
+            userRepository.save(user1);
+
+            var user2 = new User();
+            user2.setEmail("admin@mail.com");
+            user2.setPassword(passwordEncoder().encode("user2"));
+            user2.setUsername("user2");
+            user2.setRoles(Set.of(adminRole));
+            userRepository.save(user2);
+
+            var user3 = new User();
+            user3.setEmail("seller@mail.com");
+            user3.setPassword(passwordEncoder().encode("user3"));
+            user3.setUsername("user3");
+            user3.setRoles(Set.of(sellerRole));
+            userRepository.save(user3);
         });
     }
 }

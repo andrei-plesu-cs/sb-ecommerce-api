@@ -20,4 +20,12 @@ public class Role {
     @Column(length = 20)
     @ToString.Exclude
     private AppRole roleName;
+
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", roleName=" + roleName +
+                '}';
+    }
 }

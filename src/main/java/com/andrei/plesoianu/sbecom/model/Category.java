@@ -20,4 +20,12 @@ public class Category {
 
     @NotBlank()
     private String categoryName;
+
+    @Override
+    public String toString() {
+        return "Category{" +
+                "categoryId=" + categoryId +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
+    }
 }

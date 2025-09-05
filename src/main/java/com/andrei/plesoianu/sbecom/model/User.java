@@ -40,7 +40,7 @@ public class User {
     @Size(max = 120)
     private String password;
 
-    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE },
+    @ManyToMany(cascade = { CascadeType.MERGE },
                 fetch = FetchType.EAGER)
     @JoinTable(name = "user_role",
                 joinColumns = @JoinColumn(name = "user_id"),
@@ -62,4 +62,13 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
     @ToString.Exclude
     private Cart cart;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                '}';
+    }
 }

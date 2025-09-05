@@ -9,9 +9,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity(name = "products")
 @Data
 @NoArgsConstructor
@@ -47,10 +44,20 @@ public class Product {
     @JoinColumn(name = "seller_id")
     private User user;
 
-    @OneToMany(mappedBy = "product", cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.EAGER)
-    private List<CartItem> products = new ArrayList<>();
-
     public double computeSpecialPrice() {
         return price - discount * 0.01 * price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", productName='" + productName + '\'' +
+                ", image='" + image + '\'' +
+                ", quantity=" + quantity +
+                ", price=" + price +
+                ", discount=" + discount +
+                ", specialPrice=" + specialPrice +
+                '}';
     }
 }

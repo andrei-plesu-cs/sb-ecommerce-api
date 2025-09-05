@@ -3,12 +3,16 @@ package com.andrei.plesoianu.sbecom.service;
 import com.andrei.plesoianu.sbecom.enums.SortOrder;
 import com.andrei.plesoianu.sbecom.exceptions.ApiException;
 import com.andrei.plesoianu.sbecom.exceptions.NotFoundException;
+import com.andrei.plesoianu.sbecom.model.Cart;
 import com.andrei.plesoianu.sbecom.model.Category;
 import com.andrei.plesoianu.sbecom.model.Product;
 import com.andrei.plesoianu.sbecom.payload.ProductDto;
 import com.andrei.plesoianu.sbecom.payload.ProductResponse;
+import com.andrei.plesoianu.sbecom.repositories.CartItemRepository;
+import com.andrei.plesoianu.sbecom.repositories.CartRepository;
 import com.andrei.plesoianu.sbecom.repositories.CategoryRepository;
 import com.andrei.plesoianu.sbecom.repositories.ProductRepository;
+import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -22,22 +26,29 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
     private final String basePath;
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final CartRepository cartRepository;
+    private final CartItemRepository cartItemRepository;
     private final FileService fileService;
     private final ModelMapper modelMapper;
 
     public ProductServiceImpl(@NonNull ProductRepository productRepository,
                               @NonNull CategoryRepository categoryRepository,
+                              @NonNull CartRepository cartRepository,
+                              @NonNull CartItemRepository cartItemRepository,
                               @NonNull FileService fileService,
                               @NonNull ModelMapper modelMapper,
                               @Value("${project.image}") String basePath) {
         this.productRepository = productRepository;
         this.categoryRepository = categoryRepository;
+        this.cartItemRepository = cartItemRepository;
+        this.cartRepository = cartRepository;
         this.fileService = fileService;
         this.modelMapper = modelMapper;
         this.basePath = basePath;
@@ -115,6 +126,7 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
+    @Transactional
     public ProductDto updateProduct(Long productId, ProductDto product) {
         var dbProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(Product.class, productId));
@@ -126,14 +138,37 @@ public class ProductServiceImpl implements ProductService {
         dbProduct.setQuantity(product.getQuantity());
         dbProduct.setSpecialPrice(dbProduct.computeSpecialPrice());
 
+        List<Cart> carts = cartRepository.findAllByProductId(productId);
+        for (Cart cart: carts) {
+            var cartItem = cart.findCartItemByProductId(productId);
+            if (cartItem != null) {
+                cartItem.setProductPrice(dbProduct.getSpecialPrice());
+                cartItem.setDiscount(dbProduct.getDiscount());
+                cartItemRepository.save(cartItem);
+                cart.recomputePrices();
+            }
+        }
+        cartRepository.saveAll(carts);
+
         var updatedProduct = productRepository.save(dbProduct);
         return modelMapper.map(updatedProduct, ProductDto.class);
     }
 
     @Override
+    @Transactional
     public boolean deleteProduct(Long productId) {
         var dbProduct = productRepository.findById(productId)
                 .orElseThrow(() -> new NotFoundException(Product.class, productId));
+
+        List<Cart> carts = cartRepository.findAllByProductId(productId);
+        for (Cart cart: carts) {
+            var cartItem = cart.findCartItemByProductId(productId);
+            if (cartItem != null) {
+                cart.getCartItems().remove(cartItem);
+                cart.recomputePrices();
+            }
+        }
+        cartRepository.saveAll(carts);
 
         productRepository.delete(dbProduct);
         return true;
