@@ -122,26 +122,28 @@ public class WebSecurityConfig {
                     });
 
             // Add one user to the DB, for each Role
-            var user1 = new User();
-            user1.setEmail("client@mail.com");
-            user1.setPassword(passwordEncoder().encode("user1"));
-            user1.setUsername("user1");
-            user1.setRoles(Set.of(userRole));
-            userRepository.save(user1);
+            if (userRepository.count() == 0) {
+                var user1 = new User();
+                user1.setEmail("client@mail.com");
+                user1.setPassword(passwordEncoder().encode("user1"));
+                user1.setUsername("user1");
+                user1.setRoles(Set.of(userRole));
+                userRepository.save(user1);
 
-            var user2 = new User();
-            user2.setEmail("admin@mail.com");
-            user2.setPassword(passwordEncoder().encode("user2"));
-            user2.setUsername("user2");
-            user2.setRoles(Set.of(adminRole));
-            userRepository.save(user2);
+                var user2 = new User();
+                user2.setEmail("admin@mail.com");
+                user2.setPassword(passwordEncoder().encode("user2"));
+                user2.setUsername("user2");
+                user2.setRoles(Set.of(adminRole));
+                userRepository.save(user2);
 
-            var user3 = new User();
-            user3.setEmail("seller@mail.com");
-            user3.setPassword(passwordEncoder().encode("user3"));
-            user3.setUsername("user3");
-            user3.setRoles(Set.of(sellerRole));
-            userRepository.save(user3);
+                var user3 = new User();
+                user3.setEmail("seller@mail.com");
+                user3.setPassword(passwordEncoder().encode("user3"));
+                user3.setUsername("user3");
+                user3.setRoles(Set.of(sellerRole));
+                userRepository.save(user3);
+            }
         });
     }
 }

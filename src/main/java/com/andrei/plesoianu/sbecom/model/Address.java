@@ -6,10 +6,6 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity(name = "addresses")
 @Data
@@ -25,8 +21,8 @@ public class Address {
     private String street;
 
     @NotBlank
-    @Size(min = 5)
-    private String buildingName;
+    @Size(min = 2)
+    private String streetNumber;
 
     @NotBlank
     @Size(min = 4)
@@ -44,16 +40,16 @@ public class Address {
     @Size(min = 6)
     private String pincode;
 
-    @ToString.Exclude
-    @ManyToMany(mappedBy = "addresses")
-    private List<User> users = new ArrayList<>();
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Override
     public String toString() {
         return "Address{" +
                 "id=" + id +
                 ", street='" + street + '\'' +
-                ", buildingName='" + buildingName + '\'' +
+                ", streetNumber='" + streetNumber + '\'' +
                 ", city='" + city + '\'' +
                 ", state='" + state + '\'' +
                 ", country='" + country + '\'' +
