@@ -12,6 +12,8 @@ import com.andrei.plesoianu.sbecom.security.request.SignupRequest;
 import com.andrei.plesoianu.sbecom.security.response.UserInfoResponse;
 import com.andrei.plesoianu.sbecom.security.response.MessageResponse;
 import com.andrei.plesoianu.sbecom.security.services.UserDetailsImpl;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +32,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@Tag(name = "Auth APIs", description = "Endpoints related to authentication")
 @RequestMapping("/api/auth")
 public class AuthController {
     private final JwtUtils jwtUtils;
@@ -49,6 +52,10 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
+    @Operation(
+            summary = "Performs user authentication",
+            description = "Returns 400 if the credentials are not correct. Returns user details on success and sets a cookie with the JWT token for subsequent authenticated requests requests"
+    )
     @PostMapping("/login")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest request) {
         Authentication authentication;
@@ -74,6 +81,10 @@ public class AuthController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, jwtCookie.toString()).body(userInfoResponse);
     }
 
+    @Operation(
+            summary = "Signs out the currently authenticated user",
+            description = "Resets the jwt cookie on success"
+    )
     @PostMapping("/signout")
     public ResponseEntity<String> signoutUser() {
         ResponseCookie cookie = jwtUtils.getCleanJwtToken();
@@ -82,6 +93,10 @@ public class AuthController {
                 .body("You've been signed out!");
     }
 
+    @Operation(
+            summary = "Creates a new account",
+            description = "Does not perform authentication. A subsequent request to the signin endpoint is required"
+    )
     @PostMapping("/signup")
     public ResponseEntity<MessageResponse> registerUser(@Valid @RequestBody SignupRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
@@ -118,6 +133,10 @@ public class AuthController {
                 .body(new MessageResponse("User created"));
     }
 
+    @Operation(
+            summary = "Returns the username of the currently authenticated user",
+            description = "Returns the username for a valid session, or nothing otherwise"
+    )
     @GetMapping("/username")
     public ResponseEntity<String> currentUserName(Authentication authentication) {
         return authentication != null
@@ -125,6 +144,10 @@ public class AuthController {
                 : ResponseEntity.noContent().build();
     }
 
+    @Operation(
+            summary = "Returns the user details of the currently authenticated user",
+            description = "Returns the user details for a valid session, or nothing otherwise"
+    )
     @GetMapping("/user")
     public ResponseEntity<UserInfoResponse> getUserDetails(Authentication authentication) {
         if (authentication != null) {
