@@ -44,6 +44,17 @@ public class JwtUtils {
     }
 
     /**
+     * Extracts the JWT token from Authorization header
+     */
+    public String getJwtTokenFromHeader(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring("Bearer ".length());
+        }
+        return null;
+    }
+
+    /**
      * Generates a cookie containing the Jwt token generated based on the
      * userDetails object (which contains the current authenticated user)
      */

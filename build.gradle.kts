@@ -23,6 +23,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.12")
     implementation("org.modelmapper:modelmapper:3.2.4")
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")
     compileOnly("org.projectlombok:lombok")
