@@ -5,6 +5,7 @@ import com.andrei.plesoianu.sbecom.model.OrderItem;
 import com.andrei.plesoianu.sbecom.payload.cart.CartDto;
 import com.andrei.plesoianu.sbecom.payload.order.OrderItemDto;
 import com.andrei.plesoianu.sbecom.payload.product.ProductDto;
+import lombok.NonNull;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.context.annotation.Bean;
@@ -52,7 +53,7 @@ public class AppConfig {
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
-            public void addCorsMappings(CorsRegistry registry) {
+            public void addCorsMappings(@NonNull CorsRegistry registry) {
                 registry.addMapping("/**")  // allow all endpoints
                         .allowedOrigins("http://localhost:5173") // allow your Vite frontend
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
